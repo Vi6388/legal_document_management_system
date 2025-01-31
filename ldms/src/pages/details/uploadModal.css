@@ -1,8 +1,7 @@
 .modal-base {
-  top: 30%;
   position: relative;
   background-color: #fefefe;
-  margin: auto;
+  margin: 40px auto;
   padding: 0;
   border: 1px solid #888;
   width: 50%;
@@ -52,4 +51,38 @@
   align-items: center;
   justify-content: center;
   padding: 20px 30px;
+}
+
+.pdf-container {
+  display: flex;
+  height: calc(100vh - 260px);
+}
+
+.left-panel {
+  flex: 2;
+  overflow: auto;
+  border-right: 1px solid #ccc;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 10px;
+}
+
+@media (min-width: 601px) and (max-width: 767px) {
+  .modal-base {
+    width: 80%;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-base {
+    width: 100%;
+  }
 }

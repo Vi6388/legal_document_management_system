@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const File = require("../model/file");
 
 const router = express.Router();
 
@@ -11,22 +12,25 @@ const storage = multer.diskStorage({
   }
 });
 
-const uploadpdf = multer({
-  storage: storage,
-  limits: { fileSize: 100000 }
-}).single("file");
-
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype == "application/pdf") {
+    if (file.mimetype === "application/pdf") {
       cb(null, true);
     } else {
-      cb(null, false);
-      return cb(new Error('Only .png, .jpg, .pdf, and .jpeg format allowed!'));
+      cb(new Error('Only .pdf format allowed!'), false);
     }
   }
 }).single("file");
+
+router.get("/getAllFiles", async(req, res) => {
+  try {
+    const files = await File.find();
+    return res.status(200).send({ message: 'File uploaded successfully', files: files });
+  } catch (error) {
+    return res.status(500).send({ message: 'Error in saving file to database.', error: error.message });
+  }
+});
 
 router.post('/pdf/', upload, async (req, res) => {
   if (!req.file) {
@@ -35,15 +39,20 @@ router.post('/pdf/', upload, async (req, res) => {
 
   const url = req.protocol + '://' + req.get('host');
 
-  const file = await PageData.findById({ _id: req.params.id });
-  if (file) {
-    file.pdf = url + '/uploads/' + req.file.filename;
-    const updatedFile = await file.save();
-    if (updatedFile) {
-      return res.status(200).send({ message: 'File updated successfully', file: updatedFile });
-    }
+  // Create a new file entry in the database
+  const newFile = new File({
+    filePath: url + '/uploads/' + req.file.filename,
+    uploadedOn: new Date().toISOString(),
+    fileName: req.file.originalname,
+    docNumber: req.body.docNumber
+  });
+
+  try {
+    const savedFile = await newFile.save();
+    return res.status(200).send({ message: 'File uploaded successfully', file: savedFile });
+  } catch (error) {
+    return res.status(500).send({ message: 'Error in saving file to database.', error: error.message });
   }
-  return res.status(500).send({ message: 'Error in updating file.' });
 });
 
 // Change export syntax

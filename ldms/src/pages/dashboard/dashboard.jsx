@@ -1,8 +1,9 @@
 // src/pages/Dashboard/Dashboard.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './dashboard.css';
 import docDownload from "../../assets/images/doc_download.png";
 import UploadModal from '../details/uploadModal';
+import axios from 'axios';
 
 const BULK_DATA = [
   { id: 1, title: "Legal Document 1", filename: "Legal Document Management - Coding Challenge.pdf", uploadedOn: "01/25/2025" },
@@ -31,6 +32,35 @@ const Dashboard = () => {
     setIsModalOpen(false);
   }
 
+  useEffect(() => {
+    getAllFiles();
+  }, []);
+
+  const getAllFiles = () => {
+    let list = [];
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/upload/getAllFiles');
+        if (response.status === 200) {
+          const data = response.data.files;
+          [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((number) => {
+            const foundItem = data?.find((item) => item.docNumber === number);
+            if (foundItem) {
+              list.push(foundItem);
+            } else {
+              list.push({ id: number });
+            }
+          });
+        }
+        setList(list);
+      } catch (error) {
+        console.error("Error fetching files:", error);
+      }
+    };
+
+    fetchFiles();
+  }
+
   return (
     <div className='container'>
       <div className="card-container">
@@ -38,7 +68,7 @@ const Dashboard = () => {
           return (
             <div className="card" key={index} onClick={() => showDocumentModal(item)}>
               <div className='card-header'>
-                <span className='card-title'>{item.title}</span>
+                <span className='card-title'>Legal Document {index + 1}</span>
               </div>
               <div className='card-content'>
                 <div className='download-image text-center'>
@@ -49,7 +79,7 @@ const Dashboard = () => {
                     <span>Uploaded On: {item.uploadedOn}</span>
                   </div>
                   <div>
-                    <span>File Name: {item.filename}</span>
+                    <span>File Name: {item.fileName}</span>
                   </div>
                 </div>
               </div>
@@ -57,7 +87,7 @@ const Dashboard = () => {
           )
         })}
 
-        <UploadModal isOpen={isModalOpen} item={selectedItem} closeModal={closeModal} />
+        <UploadModal isOpen={isModalOpen} item={selectedItem} closeModal={closeModal} getAllFiles={getAllFiles} />
       </div>
     </div>
   );

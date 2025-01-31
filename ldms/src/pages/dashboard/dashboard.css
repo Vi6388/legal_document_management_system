@@ -4,6 +4,7 @@
   display: flex;
   justify-content: space-between;
   margin: auto;
+  min-height: calc(100vh - 132px);
 }
 
 .dashboard h1 {
@@ -20,8 +21,9 @@
 .card-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   word-wrap: break-word;
+  gap: 40px;
 }
 
 .card {
@@ -32,6 +34,7 @@
   border: solid 1px #F5F5F5;
   border-radius: 8px;
   cursor: pointer;
+  max-height: 235px;
 }
 
 .card:hover {
