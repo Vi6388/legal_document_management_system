@@ -8,11 +8,19 @@ documents with mock data extractions. Optionally, implement a NodeJS backend to 
 
 Technical Stack 
 ● Frontend:
-#
+
+
   ○ ReactJS 
-  #
+
+  
   ○ CSS Flexbox for responsive design 
+
+  
   ○ React Modal or similar library for modals 
+
+  
   ○ PDF.js or react-pdf for PDF previews 
+
+  
 ● Backend (Optional): 
   ○ NodeJS with Express
