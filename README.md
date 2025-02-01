@@ -10,6 +10,7 @@ Technical Stack
 
 
 ● Frontend:
+
   ○ ReactJS
   
   ○ CSS Flexbox for responsive design 
